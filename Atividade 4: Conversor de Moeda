@@ -1,0 +1,94 @@
+//activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/valueInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Valor a ser convertido"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/conversionRateInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/valueInput"
+        android:layout_marginTop="16dp"
+        android:hint="Taxa de conversão (ex: 5.00)"
+        android:inputType="numberDecimal" />
+
+    <Button
+        android:id="@+id/convertButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/conversionRateInput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Converter" />
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/convertButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/black" />
+
+</RelativeLayout>
+
+
+//MainActivity.kt
+
+package com.example.conversaomoedaapp
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var valueInput: EditText
+    private lateinit var conversionRateInput: EditText
+    private lateinit var convertButton: Button
+    private lateinit var resultText: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+   
+        valueInput = findViewById(R.id.valueInput)
+        conversionRateInput = findViewById(R.id.conversionRateInput)
+        convertButton = findViewById(R.id.convertButton)
+        resultText = findViewById(R.id.resultText)
+
+   
+        convertButton.setOnClickListener {
+            val valueText = valueInput.text.toString()
+            val conversionRateText = conversionRateInput.text.toString()
+
+            if (valueText.isNotEmpty() && conversionRateText.isNotEmpty()) {
+                val value = valueText.toDoubleOrNull()
+                val conversionRate = conversionRateText.toDoubleOrNull()
+
+                if (value != null && conversionRate != null) {
+                    val convertedValue = value * conversionRate
+                    resultText.text = "Valor convertido: $convertedValue"
+                } else {
+                    resultText.text = "Por favor, insira valores válidos."
+                }
+            } else {
+                resultText.text = "Por favor, preencha todos os campos."
+            }
+        }
+    }
+}
