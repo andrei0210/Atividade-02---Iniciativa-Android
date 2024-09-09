@@ -1,0 +1,76 @@
+//activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/passwordInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Digite a senha"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/checkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/passwordInput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Verificar Senha" />
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/black" />
+
+</RelativeLayout>
+
+//MainActivity.kt
+
+package com.example.senhaapp
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var passwordInput: EditText
+    private lateinit var checkButton: Button
+    private lateinit var resultText: TextView
+
+    private val correctPassword = "1234" 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        
+        passwordInput = findViewById(R.id.passwordInput)
+        checkButton = findViewById(R.id.checkButton)
+        resultText = findViewById(R.id.resultText)
+
+       
+        checkButton.setOnClickListener {
+            val enteredPassword = passwordInput.text.toString()
+            if (enteredPassword == correctPassword) {
+                resultText.text = "Senha correta"
+            } else {
+                resultText.text = "Senha incorreta"
+            }
+        }
+    }
+}
+
+
