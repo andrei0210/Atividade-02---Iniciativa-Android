@@ -1,0 +1,94 @@
+//activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/billAmountInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Valor da conta"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/tipPercentageInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/billAmountInput"
+        android:layout_marginTop="16dp"
+        android:hint="Porcentagem da gorjeta (ex: 10, 15, 20)"
+        android:inputType="numberDecimal" />
+
+    <Button
+        android:id="@+id/calculateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tipPercentageInput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Calcular Gorjeta" />
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calculateButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/black" />
+
+</RelativeLayout>
+
+//MainActivity.kt
+
+package com.example.gorjetaapp
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var billAmountInput: EditText
+    private lateinit var tipPercentageInput: EditText
+    private lateinit var calculateButton: Button
+    private lateinit var resultText: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+       
+        billAmountInput = findViewById(R.id.billAmountInput)
+        tipPercentageInput = findViewById(R.id.tipPercentageInput)
+        calculateButton = findViewById(R.id.calculateButton)
+        resultText = findViewById(R.id.resultText)
+
+       
+        calculateButton.setOnClickListener {
+            val billAmountText = billAmountInput.text.toString()
+            val tipPercentageText = tipPercentageInput.text.toString()
+
+            if (billAmountText.isNotEmpty() && tipPercentageText.isNotEmpty()) {
+                val billAmount = billAmountText.toDoubleOrNull()
+                val tipPercentage = tipPercentageText.toDoubleOrNull()
+
+                if (billAmount != null && tipPercentage != null && billAmount > 0) {
+                    val tipAmount = billAmount * (tipPercentage / 100)
+                    val totalAmount = billAmount + tipAmount
+                    resultText.text = "Gorjeta: ${"%.2f".format(tipAmount)}\nTotal: ${"%.2f".format(totalAmount)}"
+                } else {
+                    resultText.text = "Por favor, insira valores válidos para o valor da conta e a porcentagem da gorjeta."
+                }
+            } else {
+                resultText.text = "Por favor, preencha todos os campos."
+            }
+        }
+    }
+}
