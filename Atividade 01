@@ -1,0 +1,78 @@
+// activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/ageInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Digite sua idade"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/checkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ageInput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Verificar Idade" />
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/black" />
+
+//MainActivity.kt
+
+package com.example.idadeapp
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var ageInput: EditText
+    private lateinit var checkButton: Button
+    private lateinit var resultText: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        
+        ageInput = findViewById(R.id.ageInput)
+        checkButton = findViewById(R.id.checkButton)
+        resultText = findViewById(R.id.resultText)
+
+       
+        checkButton.setOnClickListener {
+            val ageText = ageInput.text.toString()
+            if (ageText.isNotEmpty()) {
+                val age = ageText.toIntOrNull()
+                val resultMessage = when {
+                    age == null -> "Por favor, insira uma idade válida."
+                    age < 18 -> "Você é menor de idade."
+                    age in 18..60 -> "Você está na meia idade."
+                    else -> "Você é idoso."
+                }
+
+                resultText.text = resultMessage
+            } else {
+                resultText.text = "Por favor, insira sua idade."
+            }
+        }
+    }
+}
