@@ -1,0 +1,100 @@
+//activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/heightInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Digite sua altura (em metros)"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/weightInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/heightInput"
+        android:layout_marginTop="16dp"
+        android:hint="Digite seu peso (em kg)"
+        android:inputType="numberDecimal" />
+
+    <Button
+        android:id="@+id/calculateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weightInput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Calcular IMC" />
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calculateButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/black" />
+
+</RelativeLayout>
+
+
+//MainActivity.kt
+
+package com.example.imcapp
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var heightInput: EditText
+    private lateinit var weightInput: EditText
+    private lateinit var calculateButton: Button
+    private lateinit var resultText: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+      
+        heightInput = findViewById(R.id.heightInput)
+        weightInput = findViewById(R.id.weightInput)
+        calculateButton = findViewById(R.id.calculateButton)
+        resultText = findViewById(R.id.resultText)
+
+        
+        calculateButton.setOnClickListener {
+            val heightText = heightInput.text.toString()
+            val weightText = weightInput.text.toString()
+
+            if (heightText.isNotEmpty() && weightText.isNotEmpty()) {
+                val height = heightText.toDoubleOrNull()
+                val weight = weightText.toDoubleOrNull()
+
+                if (height != null && weight != null && height > 0) {
+                    val imc = weight / (height * height)
+                    val category = when {
+                        imc < 18.5 -> "Abaixo do peso"
+                        imc in 18.5..24.9 -> "Peso normal"
+                        imc in 25.0..29.9 -> "Sobrepeso"
+                        else -> "Obesidade"
+                    }
+                    resultText.text = "IMC: ${"%.2f".format(imc)}\nCategoria: $category"
+                } else {
+                    resultText.text = "Por favor, insira valores válidos para altura e peso."
+                }
+            } else {
+                resultText.text = "Por favor, preencha todos os campos."
+            }
+        }
+    }
+}
