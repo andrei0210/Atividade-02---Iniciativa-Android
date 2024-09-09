@@ -1,0 +1,113 @@
+//TextView
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/number1Input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Digite o primeiro número"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/number2Input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/number1Input"
+        android:layout_marginTop="16dp"
+        android:hint="Digite o segundo número"
+        android:inputType="numberDecimal" />
+
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/number2Input"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp"
+        android:text="Somar" />
+
+    <Button
+        android:id="@+id/subtractButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/number2Input"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:text="Subtrair" />
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addButton"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp"
+        android:textColor="@android:color/black" />
+
+</RelativeLayout>
+
+//MainActivity.kt
+
+package com.example.calculadorasimples
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var number1Input: EditText
+    private lateinit var number2Input: EditText
+    private lateinit var addButton: Button
+    private lateinit var subtractButton: Button
+    private lateinit var resultText: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+    
+        number1Input = findViewById(R.id.number1Input)
+        number2Input = findViewById(R.id.number2Input)
+        addButton = findViewById(R.id.addButton)
+        subtractButton = findViewById(R.id.subtractButton)
+        resultText = findViewById(R.id.resultText)
+
+      
+        addButton.setOnClickListener {
+            performOperation { num1, num2 -> num1 + num2 }
+        }
+
+        
+        subtractButton.setOnClickListener {
+            performOperation { num1, num2 -> num1 - num2 }
+        }
+    }
+
+    private fun performOperation(operation: (Double, Double) -> Double) {
+        val number1Text = number1Input.text.toString()
+        val number2Text = number2Input.text.toString()
+
+        if (number1Text.isNotEmpty() && number2Text.isNotEmpty()) {
+            val number1 = number1Text.toDoubleOrNull()
+            val number2 = number2Text.toDoubleOrNull()
+
+            if (number1 != null && number2 != null) {
+                val result = operation(number1, number2)
+                resultText.text = "Resultado: $result"
+            } else {
+                resultText.text = "Por favor, insira números válidos."
+            }
+        } else {
+            resultText.text = "Por favor, insira ambos os números."
+        }
+    }
+}
