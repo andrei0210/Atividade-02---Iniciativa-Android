@@ -1,0 +1,123 @@
+// activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/temperatureInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Digite a temperatura"
+        android:inputType="numberDecimal" />
+
+    <RadioGroup
+        android:id="@+id/conversionGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/temperatureInput"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/celsiusToFahrenheit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Celsius para Fahrenheit" />
+
+        <RadioButton
+            android:id="@+id/fahrenheitToCelsius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fahrenheit para Celsius" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/convertButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/conversionGroup"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Converter" />
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/convertButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/black" />
+
+</RelativeLayout>
+
+
+//MainActivity.kt
+
+package com.example.conversaoTemperaturaapp
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var temperatureInput: EditText
+    private lateinit var conversionGroup: RadioGroup
+    private lateinit var celsiusToFahrenheit: RadioButton
+    private lateinit var fahrenheitToCelsius: RadioButton
+    private lateinit var convertButton: Button
+    private lateinit var resultText: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+    
+        temperatureInput = findViewById(R.id.temperatureInput)
+        conversionGroup = findViewById(R.id.conversionGroup)
+        celsiusToFahrenheit = findViewById(R.id.celsiusToFahrenheit)
+        fahrenheitToCelsius = findViewById(R.id.fahrenheitToCelsius)
+        convertButton = findViewById(R.id.convertButton)
+        resultText = findViewById(R.id.resultText)
+
+       
+        convertButton.setOnClickListener {
+            val temperatureText = temperatureInput.text.toString()
+
+            if (temperatureText.isNotEmpty()) {
+                val temperature = temperatureText.toDoubleOrNull()
+
+                if (temperature != null) {
+                    val selectedConversion = conversionGroup.checkedRadioButtonId
+                    val result = when (selectedConversion) {
+                        R.id.celsiusToFahrenheit -> {
+                            val fahrenheit = (temperature * 9/5) + 32
+                            "Temperatura em Fahrenheit: ${"%.2f".format(fahrenheit)}"
+                        }
+                        R.id.fahrenheitToCelsius -> {
+                            val celsius = (temperature - 32) * 5/9
+                            "Temperatura em Celsius: ${"%.2f".format(celsius)}"
+                        }
+                        else -> {
+                            "Por favor, selecione uma opção de conversão."
+                        }
+                    }
+                    resultText.text = result
+                } else {
+                    resultText.text = "Por favor, insira uma temperatura válida."
+                }
+            } else {
+                resultText.text = "Por favor, preencha o campo da temperatura."
+            }
+        }
+    }
+}
